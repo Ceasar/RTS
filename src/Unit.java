@@ -7,6 +7,7 @@ public class Unit implements GameObject{
 	private int cooldown;
 	
 	public int getHealth(){
+		System.out.println("fdf");
 		return health;
 	}
 	public void setHealth(int h){
