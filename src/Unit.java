@@ -14,6 +14,7 @@ public class Unit implements GameObject{
 	private Color color;
 	
 	public int getHealth(){
+		System.out.println("fdf");
 		return health;
 	}
 	public void setHealth(int h){
