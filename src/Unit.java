@@ -8,7 +8,7 @@ public class Unit implements GameObject{
 	
 	private int health; private int damage;
 	private int speed; private int range;
-	private int cooldown;
+	private int cooldown; private int sightRadius;
 	
 	private int radius;
 	private Color color;

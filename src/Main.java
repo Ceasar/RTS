@@ -27,21 +27,36 @@ import javax.swing.JPanel;
 public class Main extends Canvas implements Serializable{
 
 	private static final long serialVersionUID = -419365737093637821L;
-	private transient BufferStrategy strategy;
-	private boolean gameRunning = true;
-	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
-	int midx = 0; int midy = 0;
-	int pointerX = 0; int pointerY = 0;
-	transient Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
-	protected Dimension screensize = toolkit.getScreenSize();
-	GameObject selected = null;
-	double scale = 1.0;
-	long lastClick = 0;
-	int radius;
+	
+	private boolean gameRunning;
+	ArrayList<GameObject> gameObjects;
+	
+	//Swing tools
+	BufferStrategy strategy;
+	Toolkit toolkit;
+	Dimension screensize;
+	int midx; int midy;
+	double scale;
+	
+	//Pointer tools
+	int pointerX; int pointerY;
+	int selectionRadius;
+	long lastClick;
 
 	public Main() {
+		gameRunning = true;
+		gameObjects = new ArrayList<GameObject>();
+		
+		toolkit = java.awt.Toolkit.getDefaultToolkit();
+		screensize = toolkit.getScreenSize();
+		midx = screensize.width / 2; midy = screensize.height / 2;
+		scale = 1.0;
+		
+		selectionRadius = 10;
+		lastClick = 0;
+		pointerX = midx; pointerY = midy;
+		
 		init();
-		radius = 10;
 	}
 
 	public void init(){
@@ -73,8 +88,6 @@ public class Main extends Canvas implements Serializable{
 
 		createBufferStrategy(2);
 		strategy = getBufferStrategy();
-		midx = screensize.width/2;
-		midy = screensize.height/2;
 	}
 
 	public void gameLoop() {
@@ -86,8 +99,7 @@ public class Main extends Canvas implements Serializable{
 			
 			g.setColor(Color.green);
 			g.drawLine(midx, midy, pointerX, pointerY);
-			g.drawOval(pointerX, pointerY, 0, 0);
-			
+			//g.drawOval(pointerX - radius, pointerY - radius, radius * 2, radius * 2);
 
 			for (int i=0;i<gameObjects.size();i++) {
 				gameObjects.get(i).update();

@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 
 
@@ -5,7 +6,9 @@ public class Base implements GameObject{
 	private int x; private int y;
 	private int health;
 	private int income;
+	private int sightRadius;
 	
+	private Color color;
 	private int radius;
 	
 	public int getHealth(){
@@ -27,7 +30,8 @@ public class Base implements GameObject{
 	}
 
 	public void draw(Graphics g) {
-
+		g.setColor(color);
+		g.fillOval(x - radius, y - radius, radius * 2, radius * 2);
 	}
 
 	public int getRadius() {
