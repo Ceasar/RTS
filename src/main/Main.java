@@ -20,13 +20,14 @@ import java.awt.image.BufferStrategy;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import units.Interceptor;
-import units.Unit;
+import main.Player.Controller;
+import main.units.ships.Interceptor;
 
 public class Main extends Canvas implements Serializable{
 
@@ -37,8 +38,7 @@ public class Main extends Canvas implements Serializable{
 	public final static double RADIUS_SCALE_FACTOR = 2;
 
 	private boolean gameRunning;
-	public static ArrayList<Unit> units;
-	public static ArrayList<Base> bases;
+	private Map map;
 
 	//Swing tools
 	BufferStrategy strategy;
@@ -56,8 +56,7 @@ public class Main extends Canvas implements Serializable{
 
 	public Main() {
 		gameRunning = true;
-		units = new ArrayList<Unit>();
-		bases = new ArrayList<Base>();
+		map = new Map(new Dimension(500, 400));
 
 		toolkit = java.awt.Toolkit.getDefaultToolkit();
 		screensize = toolkit.getScreenSize();
@@ -73,8 +72,13 @@ public class Main extends Canvas implements Serializable{
 	}
 
 	public void test(){
-		units.add(new Interceptor(cursor, Color.RED));
-		units.add(new Interceptor(new Point(20, 50), Color.RED));
+		Player red = new Player(0, Color.RED, "Red", Controller.PLAYER);
+		Player blue = new Player(1, Color.BLUE, "Blue", Controller.COMPUTER);
+		map.addPlayer(red);
+		map.addPlayer(blue);
+		
+		Unit u1 = new Interceptor(center, red);
+		map.addUnit(u1);
 	}
 
 	public void init(){
@@ -121,20 +125,19 @@ public class Main extends Canvas implements Serializable{
 
 			g.drawString(scale + "", 10, 10);
 
-			for (int i=0; i < units.size(); i++) {
-				units.get(i).update();
-
+			int unitCount = map.getUnits().size();
+			Iterator<Unit> iter = map.getUnits().iterator();
+			while (iter.hasNext()){
+				Unit unit = iter.next();
+				unit.attack();
 			}
-
-			for (int i=0; i < units.size(); i++) {
-				units.get(i).draw(g);
+			iter = map.getUnits().iterator();
+			while (iter.hasNext()){
+				Unit unit = iter.next();
+				unit.update();
+				unit.draw(g);
 			}
-
-			for (int i=0; i < bases.size(); i++) {
-				bases.get(i).update();
-				bases.get(i).draw(g);
-			}
-
+			
 			g.dispose();
 			if (gameRunning) strategy.show();
 
@@ -163,15 +166,7 @@ public class Main extends Canvas implements Serializable{
 		public void mousePressed(MouseEvent e){
 
 			//Order units to move.
-			for (int i=0; i < units.size(); i++) {
-				Unit unit = units.get(i);
-				Point2D loc = unit.getLocation();
-				double x = cursor.x / scale - loc.getX(); double y = cursor.y / scale - loc.getY();
-				double distance = Math.sqrt(x*x+y*y);
-				if (distance < selectionRadius){
-					selected.add(unit);
-				}
-			}
+			selected.addAll(map.getAllUnitsInRange(selectionRadius, cursor));
 
 			//Detect double-click.
 			if (System.currentTimeMillis() - lastClick < DOUBLE_CLICK_WAIT_TIME){
