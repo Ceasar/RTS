@@ -11,7 +11,7 @@ public class Interceptor extends Unit{
 	static final double HIT_POINTS = 20;
 	static final double DAMAGE = 2;
 	static final double RANGE = 100;
-	static final double SPEED = 3;
+	static final double SPEED = 2;
 	static final int RADIUS = 10;
 	static final long COOLDOWN_TIME = (long) 4.0;
 
@@ -38,11 +38,9 @@ public class Interceptor extends Unit{
 			Point2D destination = getOrder();
 			Point2D location = getLocation();
 			double x = location.getX(); double y = location.getY();
-			if (destination != null){
-				double angle = Math.atan2((destination.getY() - y), (destination.getX() - x));
-				setDx(getSpeed() * Math.cos(angle));
-				setDy(getSpeed() * Math.sin(angle));
-			}
+			double angle = Math.atan2(destination.getY() - y, destination.getX() - x);
+			setDx(getSpeed() * Math.cos(angle));
+			setDy(getSpeed() * Math.sin(angle));
 			Point2D newLoc = new Point((int)(x + getDx()), (int)(y + getDy()));
 			setLocation(newLoc);
 		}
@@ -55,7 +53,14 @@ public class Interceptor extends Unit{
 	public void draw(Graphics g) {
 		g.setColor(getColor());
 		Point2D location = getLocation();
-		g.fillOval((int)(location.getX() - getRadius()), (int)(location.getY() - getRadius()), getRadius() * 2, getRadius() * 2);
+		double x = location.getX(); double y = location.getY();
+		int radius = getRadius();
+		g.fillOval((int)x - radius, (int)y - radius, radius * 2, radius * 2);
+		double range = getRange();
+		g.drawOval((int)(x - range), (int)(y - range), (int)(range * 2), (int)(range * 2));
+		Point2D destination = getOrder();
+		if (destination != null)
+			g.drawLine((int)x, (int)y, (int)destination.getX(), (int)destination.getY());
 	}
 
 }

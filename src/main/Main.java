@@ -61,7 +61,7 @@ public class Main extends Canvas implements Serializable{
 		center = new Point(screensize.width / 2, screensize.height / 2);
 		scale = 1.0;
 		
-		selectionRadius = 10;
+		selectionRadius = 50;
 		lastClick = 0;
 		cursor = new Point(center.x, center.y);
 
@@ -71,6 +71,7 @@ public class Main extends Canvas implements Serializable{
 	
 	public void test(){
 		units.add(new Interceptor(cursor, Color.RED));
+		units.add(new Interceptor(new Point(20, 50), Color.RED));
 	}
 
 	public void init(){
