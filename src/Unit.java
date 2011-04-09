@@ -1,10 +1,17 @@
+import java.awt.Color;
+import java.awt.Graphics;
+
 
 public class Unit implements GameObject{
-	private int health;
-	private int range;
-	private int strength;
-	private int speed;
+	private int x; private int y;
+	private int dx; private int dy;
+	
+	private int health; private int damage;
+	private int speed; private int range;
 	private int cooldown;
+	
+	private int radius;
+	private Color color;
 	
 	public int getHealth(){
 		return health;
@@ -20,12 +27,12 @@ public class Unit implements GameObject{
 		range = r;
 	}
 	
-	public int getStrength(){
-		return strength;
+	public int getDamage(){
+		return damage;
 	}
 	
-	public void setStrength(int s){
-		strength = s;
+	public void setDamage(int d){
+		damage = d;
 	}
 	
 	public int getSpeed(){
@@ -42,24 +49,34 @@ public class Unit implements GameObject{
 		cooldown = s;
 	}
 	
-	
-	public boolean dead(){
-		if(health <= 0)
-			return true;
-		else
-			return false;
-	}
-	
-	public void draw(){
-		
+	public boolean isAlive(){
+		return (health <= 0);
 	}
 
 	public void attack(GameObject target){
 		target.setHealth(target.getHealth()-1);
 	}
 	
-	public void move(){
+	public void update() {
+		x += dx; y += dy;
 		
+	}
+
+	public void draw(Graphics g) {
+		g.setColor(color);
+		g.drawOval(x - radius, y - radius, radius * 2, radius * 2);
+	}
+
+	public int getRadius() {
+		return radius;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
 	}
 	
 

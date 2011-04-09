@@ -117,10 +117,10 @@ public class Main extends Canvas implements Serializable{
 		public void mousePressed(MouseEvent e){
 			
 			for (int i=0;i<gameObjects.size();i++) {
-				GameObject entity = gameObjects.get(i);
-				double x = pointerX / scale - entity.x; double y = pointerY / scale - entity.y;
+				GameObject gameObject = gameObjects.get(i);
+				double x = pointerX / scale - gameObject.getX(); double y = pointerY / scale - gameObject.getY();
 				double distance = Math.sqrt(x*x+y*y);
-				if (distance < entity.radius){
+				if (distance < gameObject.getRadius()){
 				}
 			}
 			if (System.currentTimeMillis() - lastClick < 200){
