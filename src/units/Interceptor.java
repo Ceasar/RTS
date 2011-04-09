@@ -25,6 +25,9 @@ public class Interceptor extends Unit{
 		setRadius(RADIUS);
 	}
 
+	/**
+	 * Picks a random unit within range and damages it.
+	 */
 	public void attack() {
 		if (getCooldown() > 0)
 			return;
@@ -34,6 +37,7 @@ public class Interceptor extends Unit{
 	}
 
 	public void update() {
+		//Moves the unit closer to its target destination.
 		if (getOrder() != null && getLocation().distance(getOrder()) > RADIUS){
 			Point2D destination = getOrder();
 			Point2D location = getLocation();

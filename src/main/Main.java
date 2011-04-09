@@ -34,6 +34,7 @@ public class Main extends Canvas implements Serializable{
 
 	public final static long DOUBLE_CLICK_WAIT_TIME = 200;
 	public final static double SCALE_FACTOR = 0.1;
+	public final static double RADIUS_SCALE_FACTOR = 2;
 
 	private boolean gameRunning;
 	public static ArrayList<Unit> units;
@@ -48,19 +49,21 @@ public class Main extends Canvas implements Serializable{
 
 	//Pointer tools
 	Point cursor;
-	int selectionRadius;
+	double selectionRadius;
 	long lastClick;
+
+	boolean shiftPressed = false;
 
 	public Main() {
 		gameRunning = true;
 		units = new ArrayList<Unit>();
 		bases = new ArrayList<Base>();
-		
+
 		toolkit = java.awt.Toolkit.getDefaultToolkit();
 		screensize = toolkit.getScreenSize();
 		center = new Point(screensize.width / 2, screensize.height / 2);
 		scale = 1.0;
-		
+
 		selectionRadius = 50;
 		lastClick = 0;
 		cursor = new Point(center.x, center.y);
@@ -68,7 +71,7 @@ public class Main extends Canvas implements Serializable{
 		test();
 		init();
 	}
-	
+
 	public void test(){
 		units.add(new Interceptor(cursor, Color.RED));
 		units.add(new Interceptor(new Point(20, 50), Color.RED));
@@ -114,19 +117,19 @@ public class Main extends Canvas implements Serializable{
 
 			g.setColor(Color.green);
 			int scaledCursorX = (int)(cursor.x / scale); int scaledCursorY = (int)(cursor.y / scale);
-			g.drawOval(scaledCursorX - selectionRadius, scaledCursorY - selectionRadius, selectionRadius * 2, selectionRadius * 2);
+			g.drawOval(scaledCursorX - (int)selectionRadius, scaledCursorY - (int)selectionRadius, (int)selectionRadius * 2, (int)selectionRadius * 2);
 
 			g.drawString(scale + "", 10, 10);
-			
+
 			for (int i=0; i < units.size(); i++) {
 				units.get(i).update();
-				
+
 			}
-			
+
 			for (int i=0; i < units.size(); i++) {
 				units.get(i).draw(g);
 			}
-			
+
 			for (int i=0; i < bases.size(); i++) {
 				bases.get(i).update();
 				bases.get(i).draw(g);
@@ -149,13 +152,16 @@ public class Main extends Canvas implements Serializable{
 	private class MouseInputHandler extends MouseAdapter{
 
 		private Set<Unit> selected;
-		
+
 		public MouseInputHandler() {
 			selected = new HashSet<Unit>();
 		}
-		
+
+		/**
+		 * Selects units within the selection radius.
+		 */
 		public void mousePressed(MouseEvent e){
-			
+
 			//Order units to move.
 			for (int i=0; i < units.size(); i++) {
 				Unit unit = units.get(i);
@@ -166,7 +172,7 @@ public class Main extends Canvas implements Serializable{
 					selected.add(unit);
 				}
 			}
-			
+
 			//Detect double-click.
 			if (System.currentTimeMillis() - lastClick < DOUBLE_CLICK_WAIT_TIME){
 			}
@@ -175,6 +181,9 @@ public class Main extends Canvas implements Serializable{
 			lastClick = System.currentTimeMillis();
 		}
 
+		/**
+		 * Issues a move order to selected units.
+		 */
 		public void mouseReleased(MouseEvent e){
 			Point target = new Point((int)(cursor.x / scale), (int)(cursor.y / scale));
 			for (Unit unit : selected){
@@ -191,9 +200,9 @@ public class Main extends Canvas implements Serializable{
 	 *
 	 */
 	private class MouseMotionHandler extends MouseMotionAdapter{
-		
+
 		public MouseMotionHandler() {}
-		
+
 		/**
 		 * Activates when not dragging.
 		 */
@@ -215,15 +224,21 @@ public class Main extends Canvas implements Serializable{
 	 *
 	 */
 	private class MouseWheelHandler implements MouseWheelListener{
-		
+
 		public MouseWheelHandler() {}
-		
+
 		/**
 		 * Zooms in or out.
 		 */
 		public void mouseWheelMoved(MouseWheelEvent e){
-			double scaleUnits = scale - e.getWheelRotation() * SCALE_FACTOR;
-			if (scaleUnits > 0) scale = scaleUnits;
+			if (shiftPressed){
+				double scaleUnits = selectionRadius - e.getWheelRotation() * RADIUS_SCALE_FACTOR;
+				if (scaleUnits > 0) selectionRadius = scaleUnits;
+			}
+			else{
+				double scaleUnits = scale - e.getWheelRotation() * SCALE_FACTOR;
+				if (scaleUnits > 0) scale = scaleUnits;
+			}
 		}
 	}
 
@@ -245,9 +260,15 @@ public class Main extends Canvas implements Serializable{
 			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 
 			}
+			if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+				shiftPressed = true;
+			}
 		} 
 
 		public void keyReleased(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+				shiftPressed = false;
+			}
 		}
 
 		public void keyTyped(KeyEvent e) {
