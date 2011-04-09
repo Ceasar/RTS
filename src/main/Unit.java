@@ -57,7 +57,6 @@ public abstract class Unit extends GameObject{
 		Color color = new Color((int) (255 * (1 - life)), (int) (255 * life), 0);
 		g.setColor(color);
 		g.fillRect((int)(x - getCollisionSize()), (int)(y - getCollisionSize() - 6), (int)(getCollisionSize() * 2 * life), 5);
-		g.drawString(speed + "", (int)x, (int)y);
 	}
 	
 	/**
