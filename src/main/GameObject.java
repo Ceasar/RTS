@@ -7,18 +7,18 @@ import java.awt.geom.Point2D;
 
 public abstract class GameObject {
 
-	private Point2D location;
+	private Location location;
 	private double collisionSize;
 	
 	public abstract void update();
 	
 	public abstract void draw(Graphics g);
 
-	public void setLocation(Point2D location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 
-	public Point2D getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 

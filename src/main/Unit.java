@@ -17,10 +17,11 @@ public abstract class Unit extends GameObject{
 	private long cooldown;
 	private int sightRadius;
 	
-	private Point2D destination;
+	private Location destination;
 	private Player owner;
 	
 	public Unit(){
+		destination = null;
 		dx = 0; dy = 0;
 	}
 	
@@ -32,11 +33,11 @@ public abstract class Unit extends GameObject{
 		hitPoints = h;
 	}
 	
-	public void issueMoveOrder(Point2D destination){
+	public void issueMoveOrder(Location destination){
 		this.destination = destination;
 	}
 	
-	public Point2D getOrder(){
+	public Location getOrder(){
 		return destination;
 	}
 	
@@ -77,8 +78,8 @@ public abstract class Unit extends GameObject{
 	}
 	
 	public double distanceToObject(GameObject other){
-		Point2D location = getLocation();
-		Point2D targetLoc = other.getLocation();
+		Location location = getLocation();
+		Location targetLoc = other.getLocation();
 		double xDiff = targetLoc.getX() - location.getX(); double yDiff = targetLoc.getY() - location.getY();
 		return Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 	}

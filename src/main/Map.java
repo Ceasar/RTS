@@ -24,7 +24,7 @@ public class Map {
 	 * @param point
 	 * @return
 	 */
-	public Set<Unit> getAllUnitsInRange(double range, Point point){
+	public Set<Unit> getAllUnitsInRange(double range, Location point){
 		HashSet<Unit> matching = new HashSet<Unit>();
 		Iterator<Unit> iter = units.iterator();
 		while (iter.hasNext()){
@@ -42,7 +42,7 @@ public class Map {
 	 * @param player
 	 * @return
 	 */
-	public Set<Unit> getPlayerUnitsInRange(double range, Point point, Player player){
+	public Set<Unit> getPlayerUnitsInRange(double range, Location point, Player player){
 		HashSet<Unit> matching = new HashSet<Unit>();
 		Iterator<Unit> iter = units.iterator();
 		while (iter.hasNext()){

@@ -15,10 +15,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -77,7 +75,7 @@ public class Main extends Canvas implements Serializable{
 		map.addPlayer(red);
 		map.addPlayer(blue);
 		
-		Unit u1 = new Interceptor(center, red);
+		Unit u1 = new Interceptor(new Location(center.x, center.y), red);
 		map.addUnit(u1);
 	}
 
@@ -120,12 +118,11 @@ public class Main extends Canvas implements Serializable{
 			g.scale(scale, scale);
 
 			g.setColor(Color.green);
-			int scaledCursorX = (int)(cursor.x / scale); int scaledCursorY = (int)(cursor.y / scale);
+			int scaledCursorX = (int)(cursor.getX() / scale); int scaledCursorY = (int)(cursor.getY() / scale);
 			g.drawOval(scaledCursorX - (int)selectionRadius, scaledCursorY - (int)selectionRadius, (int)selectionRadius * 2, (int)selectionRadius * 2);
 
 			g.drawString(scale + "", 10, 10);
 
-			int unitCount = map.getUnits().size();
 			Iterator<Unit> iter = map.getUnits().iterator();
 			while (iter.hasNext()){
 				Unit unit = iter.next();
@@ -166,7 +163,8 @@ public class Main extends Canvas implements Serializable{
 		public void mousePressed(MouseEvent e){
 
 			//Order units to move.
-			selected.addAll(map.getAllUnitsInRange(selectionRadius, cursor));
+			Location cursorLoc = new Location(cursor.x, cursor.y);
+			selected.addAll(map.getAllUnitsInRange(selectionRadius, cursorLoc));
 
 			//Detect double-click.
 			if (System.currentTimeMillis() - lastClick < DOUBLE_CLICK_WAIT_TIME){
@@ -180,7 +178,7 @@ public class Main extends Canvas implements Serializable{
 		 * Issues a move order to selected units.
 		 */
 		public void mouseReleased(MouseEvent e){
-			Point target = new Point((int)(cursor.x / scale), (int)(cursor.y / scale));
+			Location target = new Location(cursor.getX() / scale, cursor.getY() / scale);
 			for (Unit unit : selected){
 				unit.issueMoveOrder(target);
 			}
