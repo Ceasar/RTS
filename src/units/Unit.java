@@ -5,58 +5,58 @@ import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Vector;
 
 import main.GameObject;
 import main.Main;
 
 
 public abstract class Unit extends GameObject{
-	private int dx; private int dy;
+	private double dx; private double dy;
 	
-	private int hitPoints; private int damage;
-	private int speed;
-	private int range;
+	private double hitPoints; private double damage;
+	private double speed; private double range;
 	private long cooldown; private int sightRadius;
 	
 	private Point2D destination;
 	
-	public int getHitPoints(){
+	public double getHitPoints(){
 		return hitPoints;
 	}
 	
-	public void setHitPoints(int h){
+	public void setHitPoints(double h){
 		hitPoints = h;
 	}
 	
-	public void setDestination(Point2D destination){
+	public void issueMoveOrder(Point2D destination){
 		this.destination = destination;
 	}
 	
-	public Point2D getDestination(){
+	public Point2D getOrder(){
 		return destination;
 	}
 	
-	public int getRange(){
+	public double getRange(){
 		return range;
 	}
 	
-	public void setRange(int r){
+	public void setRange(double r){
 		range = r;
 	}
 	
-	public int getDamage(){
+	public double getDamage(){
 		return damage;
 	}
 	
-	public void setDamage(int d){
+	public void setDamage(double d){
 		damage = d;
 	}
 	
-	public int getSpeed(){
+	public double getSpeed(){
 		return speed;
 	}
 	
-	public void setSpeed(int s){
+	public void setSpeed(double s){
 		speed = s;
 	}
 	
@@ -73,11 +73,13 @@ public abstract class Unit extends GameObject{
 	}
 	
 	public double distanceToObject(GameObject other){
-		double xDiff = other.getX() - getX(); double yDiff = other.getY() - getY();
+		Point2D location = getLocation();
+		Point2D targetLoc = other.getLocation();
+		double xDiff = targetLoc.getX() - location.getX(); double yDiff = targetLoc.getY() - location.getY();
 		return Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
 	}
-
-	public Set<Unit> getTargets(){
+	
+	public Set<Unit> getUnitsInRange(double range){
 		HashSet<Unit> targets = new HashSet<Unit>();
 		for (int i=0; i < Main.units.size(); i++) {
 			Unit unit = Main.units.get(i);
@@ -89,19 +91,19 @@ public abstract class Unit extends GameObject{
 	
 	public abstract void attack();
 
-	public void setDx(int dx) {
+	public void setDx(double dx) {
 		this.dx = dx;
 	}
 
-	public int getDx() {
+	public double getDx() {
 		return dx;
 	}
 
-	public void setDy(int dy) {
+	public void setDy(double dy) {
 		this.dy = dy;
 	}
 
-	public int getDy() {
+	public double getDy() {
 		return dy;
 	}
 

@@ -2,11 +2,12 @@ package main;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.geom.Point2D;
 
 
 public abstract class GameObject {
 
-	private int x; private int y;
+	private Point2D location;
 	private int radius;
 	private Color color;
 	
@@ -21,22 +22,6 @@ public abstract class GameObject {
 	public int getRadius(){
 		return radius;
 	}
-	
-	public void setX(int x){
-		this.x = x;
-	}
-	
-	public int getX(){
-		return x;
-	}
-	
-	public void setY(int y){
-		this.y = y;
-	}
-	
-	public int getY(){
-		return y;
-	}
 
 	public void setColor(Color color) {
 		this.color = color;
@@ -44,6 +29,14 @@ public abstract class GameObject {
 
 	public Color getColor() {
 		return color;
+	}
+
+	public void setLocation(Point2D location) {
+		this.location = location;
+	}
+
+	public Point2D getLocation() {
+		return location;
 	}
 	
 }

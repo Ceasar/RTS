@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -14,13 +15,17 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import units.Interceptor;
 import units.Unit;
 
 public class Main extends Canvas implements Serializable{
@@ -38,11 +43,11 @@ public class Main extends Canvas implements Serializable{
 	BufferStrategy strategy;
 	Toolkit toolkit;
 	Dimension screensize;
-	int midx; int midy;
+	Point center;
 	double scale;
 
 	//Pointer tools
-	int cursorX; int cursorY;
+	Point cursor;
 	int selectionRadius;
 	long lastClick;
 
@@ -50,17 +55,22 @@ public class Main extends Canvas implements Serializable{
 		gameRunning = true;
 		units = new ArrayList<Unit>();
 		bases = new ArrayList<Base>();
-
+		
 		toolkit = java.awt.Toolkit.getDefaultToolkit();
 		screensize = toolkit.getScreenSize();
-		midx = screensize.width / 2; midy = screensize.height / 2;
+		center = new Point(screensize.width / 2, screensize.height / 2);
 		scale = 1.0;
-
+		
 		selectionRadius = 10;
 		lastClick = 0;
-		cursorX = midx; cursorY = midy;
+		cursor = new Point(center.x, center.y);
 
+		test();
 		init();
+	}
+	
+	public void test(){
+		units.add(new Interceptor(cursor, Color.RED));
 	}
 
 	public void init(){
@@ -102,8 +112,10 @@ public class Main extends Canvas implements Serializable{
 			g.scale(scale, scale);
 
 			g.setColor(Color.green);
-			g.drawOval(cursorX - selectionRadius, cursorY - selectionRadius, selectionRadius * 2, selectionRadius * 2);
+			g.drawOval(cursor.x - selectionRadius, cursor.y - selectionRadius, selectionRadius * 2, selectionRadius * 2);
 
+			g.drawString(cursor.x + "", 10, 10);
+			
 			for (int i=0; i < units.size(); i++) {
 				units.get(i).update();
 				
@@ -134,17 +146,22 @@ public class Main extends Canvas implements Serializable{
 
 	private class MouseInputHandler extends MouseAdapter{
 
-		public MouseInputHandler() {}
-
+		private Set<Unit> selected;
+		
+		public MouseInputHandler() {
+			selected = new HashSet<Unit>();
+		}
+		
 		public void mousePressed(MouseEvent e){
 			
 			//Order units to move.
 			for (int i=0; i < units.size(); i++) {
 				Unit unit = units.get(i);
-				double x = cursorX / scale - unit.getX(); double y = cursorY / scale - unit.getY();
+				Point2D loc = unit.getLocation();
+				double x = cursor.x / scale - loc.getX(); double y = cursor.y / scale - loc.getY();
 				double distance = Math.sqrt(x*x+y*y);
 				if (distance < selectionRadius){
-					
+					selected.add(unit);
 				}
 			}
 			
@@ -157,6 +174,10 @@ public class Main extends Canvas implements Serializable{
 		}
 
 		public void mouseReleased(MouseEvent e){
+			for (Unit unit : selected){
+				unit.issueMoveOrder(cursor);
+			}
+			selected.clear();
 		}
 
 	}
@@ -174,14 +195,14 @@ public class Main extends Canvas implements Serializable{
 		 * Activates when not dragging.
 		 */
 		public void mouseMoved(MouseEvent e){
-			cursorX = e.getX(); cursorY = e.getY();
+			cursor = e.getPoint();
 		}
 
 		/**
 		 * Activates when dragging.
 		 */
 		public void mouseDragged(MouseEvent e){
-			cursorX = e.getX(); cursorY = e.getY();
+			cursor = e.getPoint();
 		}
 	}
 
