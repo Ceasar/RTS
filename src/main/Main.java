@@ -113,9 +113,10 @@ public class Main extends Canvas implements Serializable{
 			g.scale(scale, scale);
 
 			g.setColor(Color.green);
-			g.drawOval(cursor.x - selectionRadius, cursor.y - selectionRadius, selectionRadius * 2, selectionRadius * 2);
+			int scaledCursorX = (int)(cursor.x / scale); int scaledCursorY = (int)(cursor.y / scale);
+			g.drawOval(scaledCursorX - selectionRadius, scaledCursorY - selectionRadius, selectionRadius * 2, selectionRadius * 2);
 
-			g.drawString(cursor.x + "", 10, 10);
+			g.drawString(scale + "", 10, 10);
 			
 			for (int i=0; i < units.size(); i++) {
 				units.get(i).update();
@@ -175,8 +176,9 @@ public class Main extends Canvas implements Serializable{
 		}
 
 		public void mouseReleased(MouseEvent e){
+			Point target = new Point((int)(cursor.x / scale), (int)(cursor.y / scale));
 			for (Unit unit : selected){
-				unit.issueMoveOrder(cursor);
+				unit.issueMoveOrder(target);
 			}
 			selected.clear();
 		}
@@ -220,8 +222,8 @@ public class Main extends Canvas implements Serializable{
 		 * Zooms in or out.
 		 */
 		public void mouseWheelMoved(MouseWheelEvent e){
-			double scaleUnits = e.getWheelRotation() * SCALE_FACTOR - scale;
-			if (scaleUnits > 0) scale += scaleUnits;
+			double scaleUnits = scale - e.getWheelRotation() * SCALE_FACTOR;
+			if (scaleUnits > 0) scale = scaleUnits;
 		}
 	}
 
