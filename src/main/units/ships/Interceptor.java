@@ -1,10 +1,6 @@
 package main.units.ships;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.geom.Point2D;
-import java.util.Vector;
 
 import main.Location;
 import main.Player;
@@ -12,7 +8,7 @@ import main.Unit;
 
 public class Interceptor extends Unit{
 
-	static final double HIT_POINTS = 20;
+	static final double DEFAULT_HIT_POINTS = 20;
 	static final double DAMAGE = 2;
 	static final double RANGE = 100;
 	static final double SPEED = 2;
@@ -20,13 +16,7 @@ public class Interceptor extends Unit{
 	static final long COOLDOWN_TIME = (long) 4.0;
 
 	public Interceptor(Location loc, Player owner){
-		setLocation(loc);
-		setOwner(owner);
-		setHitPoints(HIT_POINTS);
-		setDamage(DAMAGE);
-		setRange(RANGE);
-		setSpeed(SPEED);
-		setCollisionSize(COLLISION_SIZE);
+		super(loc, COLLISION_SIZE, owner, DEFAULT_HIT_POINTS, DAMAGE, SPEED, RANGE, COOLDOWN_TIME);
 	}
 
 	/**
@@ -41,23 +31,11 @@ public class Interceptor extends Unit{
 	}
 
 	public void update() {
-		//Moves the unit closer to its target destination.
-		if (getOrder() != null && getLocation().distance(getOrder()) > COLLISION_SIZE){
-			Location destination = getOrder();
-			Location location = getLocation();
-			double x = location.getX(); double y = location.getY();
-			double angle = Math.atan2(destination.getY() - y, destination.getX() - x);
-			setDx(getSpeed() * Math.cos(angle)); setDy(getSpeed() * Math.sin(angle));
-			Location newLoc = new Location(x + getDx(), y + getDy());
-			setLocation(newLoc);
-		}
-		else{
-			issueMoveOrder(null);
-		}
-		setCooldown((long) (getCooldown() - 0.1));
+		super.update();
 	}
 
 	public void draw(Graphics g) {
+		super.drawLifebar(g);
 		g.setColor(getOwner().getColor());
 		Location location = getLocation();
 		double x = location.getX(); double y = location.getY();

@@ -1,8 +1,6 @@
 package main;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.geom.Point2D;
 
 
 public abstract class GameObject {
@@ -10,6 +8,11 @@ public abstract class GameObject {
 	private Location location;
 	private double collisionSize;
 	
+	public GameObject(Location loc, double collisionSize) {
+		this.location = loc;
+		this.collisionSize = collisionSize;
+	}
+
 	public abstract void update();
 	
 	public abstract void draw(Graphics g);

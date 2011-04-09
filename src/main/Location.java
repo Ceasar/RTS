@@ -19,6 +19,11 @@ public class Location {
 	public double distance(Location other) {
 		return Math.sqrt(Math.pow(x - other.getX(), 2) + Math.pow(y - other.getY(), 2));
 	}
+	
+	public void setXY(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
 
 	public void setX(double x) {
 		this.x = x;

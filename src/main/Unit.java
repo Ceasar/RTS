@@ -1,7 +1,8 @@
 package main;
 
-import java.awt.geom.Point2D;
 
+import java.awt.Color;
+import java.awt.Graphics;
 
 import main.GameObject;
 import main.Player;
@@ -10,27 +11,69 @@ import main.Player;
 public abstract class Unit extends GameObject{
 	private double dx; private double dy;
 	
-	private double hitPoints;
+	private double maxHitPoints;
+	
+	private double hitpoints;
 	private double damage;
 	private double speed;
 	private double range;
 	private long cooldown;
-	private int sightRadius;
 	
 	private Location destination;
 	private Player owner;
 	
-	public Unit(){
-		destination = null;
+	public Unit(Location loc, double collisionSize, Player owner, double hitpoints, double damage, double speed, double range, long cooldownTime){
+		super(loc, collisionSize);
+		this.owner = owner;
+		this.maxHitPoints = this.hitpoints = hitpoints;
+		this.damage = damage;
+		this.speed = speed;
+		this.range = range;
+		this.cooldown = cooldownTime;
+		
 		dx = 0; dy = 0;
 	}
 	
+	public void update() {
+		//Moves the unit closer to its target destination.
+		if (getOrder() != null && getLocation().distance(getOrder()) > getCollisionSize()){
+			Location location = getLocation();
+			double x = location.getX(); double y = location.getY();
+			double angle = Math.atan2(destination.getY() - y, destination.getX() - x);
+			double dx = speed * Math.cos(angle); double dy = speed * Math.sin(angle);
+			setDx(dx); setDy(dy);
+			location.setXY(x + dx, y + dy);
+		}
+		else{
+			issueMoveOrder(null);
+		}
+		setCooldown((long) (getCooldown() - 0.1));
+	}
+	
+	public void drawLifebar(Graphics g) {
+		Location location = getLocation();
+		double x = location.getX(); double y = location.getY();
+		double life = getPercentLife();
+		Color color = new Color((int) (255 * (1 - life)), (int) (255 * life), 0);
+		g.setColor(color);
+		g.fillRect((int)(x - getCollisionSize()), (int)(y - getCollisionSize() - 6), (int)(getCollisionSize() * 2 * life), 5);
+		g.drawString(speed + "", (int)x, (int)y);
+	}
+	
+	/**
+	 * Returns percentage life [0,1]
+	 * @return percentage life
+	 */
+	public double getPercentLife(){
+		return hitpoints / maxHitPoints;
+	}
+	
 	public double getHitPoints(){
-		return hitPoints;
+		return hitpoints;
 	}
 	
 	public void setHitPoints(double h){
-		hitPoints = h;
+		hitpoints = h;
 	}
 	
 	public void issueMoveOrder(Location destination){
@@ -74,7 +117,7 @@ public abstract class Unit extends GameObject{
 	}
 	
 	public boolean isAlive(){
-		return (hitPoints <= 0);
+		return (hitpoints <= 0);
 	}
 	
 	public double distanceToObject(GameObject other){

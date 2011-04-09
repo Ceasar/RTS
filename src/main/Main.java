@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import main.Player.Controller;
+import main.units.bases.Shipyard;
 import main.units.ships.Interceptor;
 
 public class Main extends Canvas implements Serializable{
@@ -77,6 +78,9 @@ public class Main extends Canvas implements Serializable{
 		
 		Unit u1 = new Interceptor(new Location(center.x, center.y), red);
 		map.addUnit(u1);
+		
+		Unit u2 = new Shipyard(new Location(100, 50), red);
+		map.addUnit(u2);
 	}
 
 	public void init(){

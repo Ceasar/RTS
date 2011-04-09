@@ -1,7 +1,6 @@
 package main;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
