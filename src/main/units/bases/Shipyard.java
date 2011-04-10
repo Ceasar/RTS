@@ -2,11 +2,12 @@ package main.units.bases;
 
 import java.awt.Graphics;
 
-import main.Base;
 import main.Location;
+import main.Map;
 import main.Player;
+import main.Unit;
 
-public class Shipyard extends Base {
+public class Shipyard extends Unit {
 	
 	static final double HIT_POINTS = 200;
 	static final double DAMAGE = 5;
@@ -15,8 +16,8 @@ public class Shipyard extends Base {
 	static final double COLLISION_SIZE = 100;
 	static final long COOLDOWN_TIME = (long) 4.0;
 
-	public Shipyard(Location loc, Player owner) {
-		super(loc, COLLISION_SIZE, owner, HIT_POINTS, DAMAGE, SPEED, RANGE,COOLDOWN_TIME);
+	public Shipyard(Map map, Location loc, Player owner) {
+		super(map, loc, COLLISION_SIZE, owner, HIT_POINTS, DAMAGE, SPEED, RANGE,COOLDOWN_TIME);
 	}
 
 	@Override
@@ -35,6 +36,7 @@ public class Shipyard extends Base {
 	public void draw(Graphics g) {
 		double radius = getCollisionSize();
 		Location loc = getLocation();
+		g.setColor(getOwner().getColor());
 		g.fillOval((int)(loc.getX() - radius), (int)(loc.getY() - radius), (int)(radius * 2), (int)(radius * 2));
 		
 	}

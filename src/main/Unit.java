@@ -13,17 +13,21 @@ public abstract class Unit extends GameObject{
 	
 	private double maxHitPoints;
 	
+	//Current stats
 	private double hitpoints;
 	private double damage;
 	private double speed;
 	private double range;
 	private long cooldown;
 	
+	private int value;
+	private boolean base;
+	
 	private Location destination;
 	private Player owner;
 	
-	public Unit(Location loc, double collisionSize, Player owner, double hitpoints, double damage, double speed, double range, long cooldownTime){
-		super(loc, collisionSize);
+	public Unit(Map map, Location loc, double collisionSize, Player owner, double hitpoints, double damage, double speed, double range, long cooldownTime){
+		super(map, loc, collisionSize);
 		this.owner = owner;
 		this.maxHitPoints = this.hitpoints = hitpoints;
 		this.damage = damage;
@@ -150,6 +154,22 @@ public abstract class Unit extends GameObject{
 
 	public Player getOwner() {
 		return owner;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setBase(boolean base) {
+		this.base = base;
+	}
+
+	public boolean isBase() {
+		return base;
 	}
 
 }

@@ -3,6 +3,7 @@ package main.units.ships;
 import java.awt.Graphics;
 
 import main.Location;
+import main.Map;
 import main.Player;
 import main.Unit;
 
@@ -15,8 +16,8 @@ public class Interceptor extends Unit{
 	static final double COLLISION_SIZE = 10;
 	static final long COOLDOWN_TIME = (long) 4.0;
 
-	public Interceptor(Location loc, Player owner){
-		super(loc, COLLISION_SIZE, owner, DEFAULT_HIT_POINTS, DAMAGE, SPEED, RANGE, COOLDOWN_TIME);
+	public Interceptor(Map map, Location loc, Player owner){
+		super(map, loc, COLLISION_SIZE, owner, DEFAULT_HIT_POINTS, DAMAGE, SPEED, RANGE, COOLDOWN_TIME);
 	}
 
 	/**
@@ -25,7 +26,7 @@ public class Interceptor extends Unit{
 	public void attack() {
 //		if (getCooldown() > 0)
 //			return;
-//		Unit target = getUnitsInRange(getRange()).iterator().next();
+//		Unit target = getMap().getEnemiesInRange(getRange(), getLocation(), getOwner()).iterator().next();
 //		target.setHitPoints(target.getHitPoints() - getDamage());
 //		setCooldown(getCooldown());
 	}

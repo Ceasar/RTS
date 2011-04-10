@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import main.Player.Controller;
+import main.units.bases.BigPlanet;
 import main.units.bases.Shipyard;
 import main.units.ships.Interceptor;
 
@@ -36,9 +37,11 @@ public class Main extends Canvas implements Serializable{
 	public final static double SCALE_FACTOR = 0.1;
 	public final static double RADIUS_SCALE_FACTOR = 2;
 	public final static double SCROLL_SPEED = 3;
+	public final static long INCOME_WAIT = 4000;
 
 	private boolean gameRunning;
 	private Map map;
+	long incomeTimer;
 
 	//Swing tools
 	BufferStrategy strategy;
@@ -60,7 +63,8 @@ public class Main extends Canvas implements Serializable{
 	public Main() {
 		gameRunning = true;
 		map = new Map(new Dimension(500, 400));
-
+		incomeTimer = INCOME_WAIT;
+		
 		toolkit = java.awt.Toolkit.getDefaultToolkit();
 		screensize = toolkit.getScreenSize();
 		center = new Point(screensize.width / 2, screensize.height / 2);
@@ -84,11 +88,14 @@ public class Main extends Canvas implements Serializable{
 		map.addPlayer(red);
 		map.addPlayer(blue);
 
-		Unit u1 = new Interceptor(new Location(center.x, center.y), red);
+		Unit u1 = new Interceptor(map, new Location(center.x, center.y), red);
 		map.addUnit(u1);
 
-		Unit u2 = new Shipyard(new Location(100, 50), red);
+		Unit u2 = new Shipyard(map, new Location(100, 50), red);
 		map.addUnit(u2);
+		
+		Unit u3 = new BigPlanet(map, new Location(1000, 50), Map.NEUTRAL_PASSIVE);
+		map.addUnit(u3);
 	}
 
 	public void init(){
@@ -194,6 +201,16 @@ public class Main extends Canvas implements Serializable{
 			g.dispose();
 			if (gameRunning) strategy.show();
 
+			incomeTimer -= 15;
+			if (incomeTimer <= 0){
+				iter = map.getUnits().iterator();
+				while (iter.hasNext()){
+					Unit unit = iter.next();
+					if (unit.isBase()){
+						unit.getOwner().addFunds(unit.getValue());
+					}
+				}
+			}
 			try { Thread.sleep(15); } catch (Exception e) {}
 		}
 	}

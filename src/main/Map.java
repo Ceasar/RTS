@@ -1,11 +1,16 @@
 package main;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import main.Player.Controller;
+
 public class Map {
+	
+	static public Player NEUTRAL_PASSIVE = new Player(0, Color.gray, "Neutral", Controller.COMPUTER);
 	
 	private Dimension size;
 	private Set<Unit> units;
@@ -47,6 +52,28 @@ public class Map {
 		while (iter.hasNext()){
 			Unit unit = iter.next();
 			if (point.distance(unit.getLocation()) < range && unit.getOwner() == player)
+				matching.add(unit);
+		}
+		return matching;
+	}
+	
+	public Set<Unit> getAlliesInRange(double range, Location point, Player player){
+		HashSet<Unit> matching = new HashSet<Unit>();
+		Iterator<Unit> iter = units.iterator();
+		while (iter.hasNext()){
+			Unit unit = iter.next();
+			if (point.distance(unit.getLocation()) < range && unit.getOwner().getAllies().contains(player))
+				matching.add(unit);
+		}
+		return matching;
+	}
+	
+	public Set<Unit> getEnemiesInRange(double range, Location point, Player player){
+		HashSet<Unit> matching = new HashSet<Unit>();
+		Iterator<Unit> iter = units.iterator();
+		while (iter.hasNext()){
+			Unit unit = iter.next();
+			if (point.distance(unit.getLocation()) < range && !unit.getOwner().getAllies().contains(player))
 				matching.add(unit);
 		}
 		return matching;
