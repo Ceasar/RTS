@@ -17,7 +17,7 @@ public class BigPlanet extends Unit{
 	static final double SIZE = 30;
 
 	public BigPlanet(Map map, Location loc, Player owner) {
-		super(map, loc, 0, owner, 0, 0, 0, RANGE, 0);
+		super(map, loc, -1, 0, 50, owner, 0, 0, RANGE, 0);
 	}
 
 	@Override

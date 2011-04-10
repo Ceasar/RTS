@@ -1,9 +1,5 @@
 package main;
 
-
-import java.awt.Color;
-import java.awt.Graphics;
-
 import main.GameObject;
 import main.Player;
 
@@ -11,10 +7,7 @@ import main.Player;
 public abstract class Unit extends GameObject{
 	private double dx; private double dy;
 	
-	private double maxHitPoints;
-	
 	//Current stats
-	private double hitpoints;
 	private double damage;
 	private double speed;
 	private double range;
@@ -26,10 +19,9 @@ public abstract class Unit extends GameObject{
 	private Location destination;
 	private Player owner;
 	
-	public Unit(Map map, Location loc, double collisionSize, Player owner, double hitpoints, double damage, double speed, double range, long cooldownTime){
-		super(map, loc, collisionSize);
+	public Unit(Map map, Location loc, double hitpoints, double collisionSize, double selectionSize, Player owner, double damage, double speed, double range, long cooldownTime){
+		super(map, loc, hitpoints, hitpoints, collisionSize, selectionSize);
 		this.owner = owner;
-		this.maxHitPoints = this.hitpoints = hitpoints;
 		this.damage = damage;
 		this.speed = speed;
 		this.range = range;
@@ -52,31 +44,6 @@ public abstract class Unit extends GameObject{
 			issueMoveOrder(null);
 		}
 		setCooldown((long) (getCooldown() - 0.1));
-	}
-	
-	public void drawLifebar(Graphics g) {
-		Location location = getLocation();
-		double x = location.getX(); double y = location.getY();
-		double life = getPercentLife();
-		Color color = new Color((int) (255 * (1 - life)), (int) (255 * life), 0);
-		g.setColor(color);
-		g.fillRect((int)(x - getCollisionSize()), (int)(y - getCollisionSize() - 6), (int)(getCollisionSize() * 2 * life), 5);
-	}
-	
-	/**
-	 * Returns percentage life [0,1]
-	 * @return percentage life
-	 */
-	public double getPercentLife(){
-		return hitpoints / maxHitPoints;
-	}
-	
-	public double getHitPoints(){
-		return hitpoints;
-	}
-	
-	public void setHitPoints(double h){
-		hitpoints = h;
 	}
 	
 	public void issueMoveOrder(Location destination){
@@ -117,10 +84,6 @@ public abstract class Unit extends GameObject{
 	
 	public void setCooldown(long cooldowntime){
 		cooldown = cooldowntime;
-	}
-	
-	public boolean isAlive(){
-		return (hitpoints <= 0);
 	}
 	
 	public double distanceToObject(GameObject other){

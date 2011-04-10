@@ -14,10 +14,11 @@ public class Interceptor extends Unit{
 	static final double RANGE = 100;
 	static final double SPEED = 2;
 	static final double COLLISION_SIZE = 10;
+	static final double SELECTION_SIZE = 12;
 	static final long COOLDOWN_TIME = (long) 4.0;
 
 	public Interceptor(Map map, Location loc, Player owner){
-		super(map, loc, COLLISION_SIZE, owner, DEFAULT_HIT_POINTS, DAMAGE, SPEED, RANGE, COOLDOWN_TIME);
+		super(map, loc, DEFAULT_HIT_POINTS, COLLISION_SIZE, SELECTION_SIZE, owner, DAMAGE, SPEED, RANGE, COOLDOWN_TIME);
 	}
 
 	/**
@@ -36,7 +37,8 @@ public class Interceptor extends Unit{
 	}
 
 	public void draw(Graphics g) {
-		super.drawLifebar(g);
+		drawSelectionCircle(g);
+		drawLifebar(g);
 		g.setColor(getOwner().getColor());
 		Location location = getLocation();
 		double x = location.getX(); double y = location.getY();
