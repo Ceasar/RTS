@@ -1,0 +1,4 @@
+TODO:
+
+-Change the design so that units don't actually posses Damage, Hitpoints, Speed, Range, etc to a structure where units possess Gun and Armor objects. Guns should also rather than dealing direct damage, launch Projectiles, another object with the relevant art and damage and such. This will massively simplify the code, in particular some of those extremely nasty constructors, as well as making future features far easier to implement (say if we wanted custom ships, upgrades, etc).
+-Build up our code right so that draw only draws objects that are actually on screen.
